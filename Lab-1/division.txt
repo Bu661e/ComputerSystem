@@ -1,0 +1,61 @@
+6
+
+#两个大于1的正数相除
+
+in   R1        #被除数a R1
+movb R0, R1    #被除数a存放到内存0x00
+in   R2		#除数b R2
+movi 1		
+movb R0, R2	#除数b存放到内存0x01
+		#商c存放到内存0x02
+		#余数d存放到内存0x03
+#####################################################
+
+movi 0
+movc R1, R0    #R1 = a
+movi 1
+movc R2, R0    #R2 = b
+
+sub  R2, R1    #sub b a  #if b > a 说明不用循环 用jg中断
+add  R2, R1
+
+#这里直接送到处理余数前
+movd 		#?0001 0001 17 当前
+movi 17     	#?0010 0010 34 目的
+add  R3, R0
+jg 		#相当于break
+
+#处理被除数
+sub  R1, R2    #R1 = a - b
+movi 0
+movb R0, R1    #0x00 被除数a : a -> a - b
+
+#处理商
+movi 2
+movc R2, R0    #R2 = c 
+movi 1
+add  R2, R0	#R2 = c + 1
+movi 2
+movb R0, R2	#0x02 商c : c -> c + 1 
+
+movd 		#?0001 1110 30 当前
+movi -19 	#?0000 1011 11 目的
+add  R3, R0 
+jmp
+
+
+#label1:
+#处理余数(唯一一次)s
+movi 0
+movc R1, R0	#R1 = a [ - b]...
+movi 3
+movb R0, R1	#在把余数送到0x03
+
+#输出前取出商c
+movi 2
+movc R2, R0
+
+
+out R2
+out R1
+halt
