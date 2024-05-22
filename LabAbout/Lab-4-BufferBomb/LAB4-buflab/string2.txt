@@ -1,0 +1,10 @@
+
+code2.o:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+00000000 <.text>:
+   0:	b8 b9 5a 8e 46       	mov    $0x468e5ab9,%eax
+   5:	68 50 8e 04 08       	push   $0x8048e50
+   a:	c3                   	ret    
